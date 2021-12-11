@@ -2,6 +2,7 @@ const express = require('express')
 const User = require('../models/user')
 const router = express.Router()
 const auth=require('../middleware/auth')
+const Admin = require('../models/admin')
 
 
 router.post('/sign-up', async (req,res)=>{
@@ -24,6 +25,20 @@ router.post('/sign-up', async (req,res)=>{
         res.status(401).send(e)
     }
 })
+
+router.post('/login-admin',async (req,res)=>
+ {
+     try{
+         const admin = await Admin.findByEmail(req.body.email,req.body.password)
+       // const token = await admin.generateAuthToken()
+         res.send({"admin":admin})
+   }
+   catch (e){
+       console.log(e)
+     res.status(401).send({error:"not matched"})
+   }
+ 
+ })
 
 router.post('/login',async (req,res)=>
 {
@@ -52,6 +67,7 @@ router.post('/logout',auth,async (req,res)=>
             return element.token!==req.token
         })
         await req.user.save()
+        res.send("logged out")
     }
     catch(e)
     {

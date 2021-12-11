@@ -56,7 +56,6 @@ userSchema.statics.findByEmail =  async function(email,password){
 }
 
 userSchema.methods.generateAuthToken = async function () {
-    console.log("before")
     const user = this
     const token = jwt.sign({_id:user._id.toString()},'myToken')
     user.tokens = user.tokens.concat({token})

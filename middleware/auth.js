@@ -6,11 +6,11 @@ const auth=async (req,res,next) =>{
     try
     {
         const token = req.header('Authorization').replace('Bearer ','')
-        
         const decoded = jwt.verify(token,'myToken')
         const user = await User.findOne({_id:decoded._id,'tokens.token': token})
+        
         if(!user) 
-          throw new Error()
+          throw new Error("not found")
 
         req.token = token
         req.user = user
