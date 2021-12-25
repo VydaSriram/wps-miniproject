@@ -1,10 +1,10 @@
 const mongoose=require('mongoose')
 const express = require('express')
 const bcrypt =  require('bcryptjs')
-mongoose.connect('mongodb://127.0.0.1:27017/vehicle-services',{
-    useNewUrlParser : true,
-   //useCreateNewIndex : true
-})
+// mongoose.connect('mongodb://127.0.0.1:27017/vehicle-services',{
+//     useNewUrlParser : true,
+//    //useCreateNewIndex : true
+// })
 const userSchema=new mongoose.Schema(
     {
         name:
@@ -19,7 +19,11 @@ const userSchema=new mongoose.Schema(
         {
             type:String
 
-        }
+        },
+        tokens:[{token:
+        {
+            type:String
+        }}]
     }
 )
 
@@ -34,6 +38,14 @@ userSchema.statics.findByEmail =  async function(email,password){
         throw new Error("invalid password")
 
     return admin
+}
+userSchema.methods.generateAuthToken = async function () {
+    const admin = this
+    const token = jwt.sign({_id:admin._id.toString()},'myToken')
+    admin.tokens = admin.tokens.concat({token})
+    await admin.save()
+    return token
+    
 }
 
 

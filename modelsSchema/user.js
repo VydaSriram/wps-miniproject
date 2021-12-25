@@ -40,7 +40,11 @@ const userSchema = new mongoose.Schema({
                 type:String
             }
     }
-    ]
+    ],
+    role : {
+        type : Number,
+        default : 0
+    }
 })
 userSchema.statics.findByEmail =  async function(email,password){
     const user = await User.findOne({email})
